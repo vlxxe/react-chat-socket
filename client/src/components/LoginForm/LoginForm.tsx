@@ -1,11 +1,17 @@
 import React from "react"
 import { Form, Input, Button, Checkbox } from "antd"
+import { useDispatch } from "react-redux"
+
 import "./LoginForm.scss"
+import { loginSuccess } from "../../redux/ducks/auth/auth-reducer"
 
 interface Props {}
 
 const LoginForm: React.FC = (props: Props) => {
+  const dispatch = useDispatch()
+
   const onFinish = (values: any) => {
+    dispatch(loginSuccess(values.username))
     console.log("Success:", values)
   }
 
@@ -22,7 +28,7 @@ const LoginForm: React.FC = (props: Props) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-        <h3 className="form-title">Вход</h3>
+        <h3 className="form-title">Добро пожаловать!</h3>
         <Form.Item
           name="username"
           rules={[{ required: true, message: "Необходимо ввести логин" }]}
@@ -30,7 +36,7 @@ const LoginForm: React.FC = (props: Props) => {
           <Input placeholder="Логин" />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="password"
           rules={[{ required: true, message: "Необходимо ввести пароль" }]}
         >
@@ -39,7 +45,7 @@ const LoginForm: React.FC = (props: Props) => {
 
         <Form.Item name="remember" valuePropName="checked">
           <Checkbox>Запомнить меня</Checkbox>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item>
           <Button

@@ -17,6 +17,11 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     io.emit("message", "user has left")
   })
+
+  socket.on("newMessage", message => {
+    console.log(message)
+    io.sockets.emit("message", message)
+  })
 })
 
 async function start() {
