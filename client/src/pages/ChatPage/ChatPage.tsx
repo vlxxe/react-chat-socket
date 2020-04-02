@@ -1,22 +1,44 @@
-import React, { useEffect } from "react"
-import io from "socket.io-client"
+import React, { useEffect, useState } from "react"
 
 import MainLayout from "../../layouts/MainLayout/MainLayout"
+import ChatInput from "../../components/ChatInput/ChatInput"
+import MessagesList from "../../components/Messages/MessagesList"
+/* import { socket } from "../../socket/socket" */
 
 interface Props {}
 
+type MessageType = {
+  author: string
+  avatar: string
+  text: string
+}
+
 const ChatPage: React.FC = (props: Props) => {
-  /* const server = "http://localhost:5000"
+  const [messagesData, setMessagesData] = useState<MessageType[]>([])
 
-  useEffect(() => {
-    const socket = io(server)
-  }, [])
+  const updateMessages = (data: MessageType) => {
+    setMessagesData(prev => [...prev, data])
+  }
 
-  const onSubmit = (e: any) => {
-    console.log(e.target.value)
-  } */
+  const sendMessage = (e: any) => {
+    /* socket.emit("newMessage", {
+      author: "Bot Vyacheslav",
+      avatar:
+        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+      text: e.target.value
+    }) */
+  }
 
-  return <MainLayout />
+  /* useEffect(() => {
+    socket.on("message", updateMessages)
+  }, []) */
+
+  return (
+    <MainLayout
+      messages={<MessagesList messagesData={messagesData} />}
+      input={<ChatInput onSubmit={sendMessage} />}
+    />
+  )
 }
 
 export default ChatPage

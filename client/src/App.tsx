@@ -26,7 +26,7 @@ const App: React.FC = (props: IAppProps) => {
   return (
     <Suspense fallback={<Loader />}>
       <Switch>
-        {auth ? (
+        {isAuth ? (
           <Route path="/" component={ChatPage} />
         ) : (
           <Route path="/" component={LoginPage} />

@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from "redux"
 import createSagaMiddleware from "redux-saga"
 
 import { rootReducer } from "./rootReducer"
+import { authRootSaga } from "./ducks/auth/auth-saga"
 
 declare global {
   interface Window {
@@ -17,4 +18,4 @@ export const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware))
 )
 
-/* sagaMiddleware.run(); */
+sagaMiddleware.run(authRootSaga)

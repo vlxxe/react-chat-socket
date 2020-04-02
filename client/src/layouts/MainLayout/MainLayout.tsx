@@ -1,32 +1,18 @@
-import React, { useEffect } from "react"
+import React, { ReactElement } from "react"
 import { Layout, Menu, Input } from "antd"
 import { UserOutlined } from "@ant-design/icons"
-import io from "socket.io-client"
 
 import "./MainLayout.scss"
-import Messages from "../../components/Messages/Messages"
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
 
-interface Props {}
+interface IMainLayout {
+  messages: ReactElement
+  input: ReactElement
+}
 
-const MainLayout: React.FC = (props: Props) => {
-  const server = "http://localhost:5000"
-  const socket = io(server)
-  useEffect(() => {
-    socket.on("message", (message: string) => {
-      console.log("mes from serv: ", message)
-    })
-  }, [])
-
-  const onSubmit = (e: any) => {
-    const mes = e.target.value
-    console.log(mes)
-    socket.emit("newMessage", mes)
-    e.target.value = ""
-  }
-
+const MainLayout: React.FC<IMainLayout> = ({ messages, input }) => {
   return (
     <Layout className="main-layout">
       <Header className="header">
@@ -61,16 +47,9 @@ const MainLayout: React.FC = (props: Props) => {
             </Menu>
           </Sider>
           <Content className="main-layout-content-container">
-            <div className="main-layout-messages">
-              <Messages />
-            </div>
+            <div className="main-layout-messages">{messages}</div>
 
-            <div className="main-layout-input">
-              <Input
-                placeholder="Введите ваше сообщение..."
-                onPressEnter={onSubmit}
-              />
-            </div>
+            <div className="main-layout-input">{input}</div>
           </Content>
         </Layout>
       </Content>

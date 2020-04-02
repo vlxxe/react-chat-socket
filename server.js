@@ -2,6 +2,7 @@ const config = require("config")
 const http = require("http")
 const express = require("express")
 const socketio = require("socket.io")
+const moment = require("moment")
 
 const app = express()
 const server = http.createServer(app)
@@ -10,17 +11,30 @@ const io = socketio(server)
 const PORT = config.get("port") || 5000
 
 io.on("connection", socket => {
-  socket.emit("message", "Welcome to chat!")
+  /* socket.emit("message", {
+    author: "Bot Vyacheslav",
+    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+    text: "Добро пожаловать в чат"
+  })
 
-  socket.broadcast.emit("message", "user has joined!")
+  socket.broadcast.emit("message", {
+    author: "Bot Vyacheslav",
+    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+    text: "Юзер присоединился!"
+  })
 
   socket.on("disconnect", () => {
-    io.emit("message", "user has left")
-  })
+    io.emit("message", {
+      author: "Bot Vyacheslav",
+      avatar:
+        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+      text: "Юзер Вышел"
+    })
+  }) */
 
   socket.on("newMessage", message => {
     console.log(message)
-    io.sockets.emit("message", message)
+    io.sockets.emit("message", { ...message, time: moment().format("HH:mm") })
   })
 })
 
