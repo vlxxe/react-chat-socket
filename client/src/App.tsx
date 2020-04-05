@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react"
 import Loader from "./components/common/Loader/Loader"
 import { Route, Switch } from "react-router-dom"
-import io from "socket.io-client"
 
 import { useSelector } from "react-redux"
 import { AppStateType } from "./redux/rootReducer"
@@ -12,15 +11,8 @@ const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage"))
 interface IAppProps {}
 
 const App: React.FC = (props: IAppProps) => {
-  const isAuth = useSelector((state: AppStateType) => state.auth.isAuth)
-  /* const server = "http://localhost:5000"
+  const isAuth = useSelector((state: AppStateType) => state.authStore.isAuth)
 
-  useEffect(() => {
-    const socket = io(server)
-    socket.on("message", message => {
-      console.log(message)
-    })
-  }, []) */
   const auth = true
 
   return (

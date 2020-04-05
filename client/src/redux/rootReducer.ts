@@ -1,13 +1,11 @@
-import { combineReducers, Reducer } from "redux"
+import { combineReducers } from "@reduxjs/toolkit"
+
 import { authReducer } from "./ducks/auth/auth-reducer"
-import { AuthStateType } from "./ducks/auth/auth-types"
+import { messagesReducer } from "./ducks/messages/messages-reducer"
 
-export type AppStateType = {
-  auth: AuthStateType
-}
+export const rootReducer = combineReducers({
+  authStore: authReducer,
+  messagesStore: messagesReducer,
+})
 
-export const rootReducer: Reducer<AppStateType> = combineReducers<AppStateType>(
-  {
-    auth: authReducer
-  }
-)
+export type RootState = ReturnType<typeof rootReducer>

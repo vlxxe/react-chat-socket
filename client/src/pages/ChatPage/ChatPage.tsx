@@ -1,41 +1,28 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
+import { useSelector, useDispatch } from "react-redux"
 
 import MainLayout from "../../layouts/MainLayout/MainLayout"
 import ChatInput from "../../components/ChatInput/ChatInput"
 import MessagesList from "../../components/Messages/MessagesList"
-/* import { socket } from "../../socket/socket" */
+import { RootState } from "../../redux/rootReducer"
+import { messageSending } from "../../redux/ducks/messages/messages-reducer"
 
-interface Props {}
+const ChatPage: React.FC = () => {
+  const dispatch = useDispatch()
+  const messages = useSelector(
+    (state: RootState) => state.messagesStore.mainChatMessages
+  )
 
-type MessageType = {
-  author: string
-  avatar: string
-  text: string
-}
+  const username = useSelector((state: RootState) => state.authStore.username)
 
-const ChatPage: React.FC = (props: Props) => {
-  const [messagesData, setMessagesData] = useState<MessageType[]>([])
-
-  const updateMessages = (data: MessageType) => {
-    setMessagesData(prev => [...prev, data])
+  const sendMessage = (text: string) => {
+    dispatch(messageSending({ author: username, text }))
+    text = ""
   }
-
-  const sendMessage = (e: any) => {
-    /* socket.emit("newMessage", {
-      author: "Bot Vyacheslav",
-      avatar:
-        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      text: e.target.value
-    }) */
-  }
-
-  /* useEffect(() => {
-    socket.on("message", updateMessages)
-  }, []) */
 
   return (
     <MainLayout
-      messages={<MessagesList messagesData={messagesData} />}
+      messages={<MessagesList messages={messages} />}
       input={<ChatInput onSubmit={sendMessage} />}
     />
   )

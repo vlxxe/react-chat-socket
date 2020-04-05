@@ -1,28 +1,22 @@
-import { AuthStateType, LoginSuccessType } from "./auth-types"
+import { createAction, createReducer } from "@reduxjs/toolkit"
 
-// Actions
-export const LOGIN_SUCCESS = "auth/LOGIN_SUCCESS"
+export const loginSuccess = createAction<string, "auth/LOGIN_SUCCESS">(
+  "auth/LOGIN_SUCCESS"
+)
 
-// Reducer
+type AuthStateType = {
+  isAuth: boolean
+  username: string
+}
+
 const initialState: AuthStateType = {
   isAuth: false,
-  username: null
+  username: "",
 }
 
-export const authReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case LOGIN_SUCCESS: {
-      return { ...state, isAuth: true, username: action.payload }
-    }
-
-    default:
-      return state
-  }
-}
-
-// Action Creators
-
-export const loginSuccess = (data: string): LoginSuccessType => ({
-  type: LOGIN_SUCCESS,
-  payload: data
-})
+export const authReducer = createReducer(initialState, (builder) =>
+  builder.addCase(loginSuccess, (state, action) => {
+    state.isAuth = true
+    state.username = action.payload
+  })
+)

@@ -1,15 +1,29 @@
-import React, { ReactElement } from "react"
+import React, { useState } from "react"
 import { Input } from "antd"
 
+const { Search } = Input
+
 interface IChatInputProps {
-  onSubmit: (e: any) => void
+  onSubmit: (text: string) => void
 }
 
 const ChatInput: React.FC<IChatInputProps> = ({ onSubmit }) => {
+  const [value, setValue] = useState<string>("")
+
+  const onPressEnter = (): void => {
+    if (value.trim()) {
+      onSubmit(value)
+      setValue("")
+    }
+  }
+
   return (
-    <Input
+    <Search
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
       placeholder="Введите ваше сообщение..."
-      onPressEnter={e => onSubmit(e)}
+      onSearch={onPressEnter}
+      enterButton="Отправить"
     />
   )
 }

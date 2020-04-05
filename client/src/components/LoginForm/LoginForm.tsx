@@ -1,22 +1,17 @@
 import React from "react"
 import { Form, Input, Button, Checkbox } from "antd"
-import { useDispatch } from "react-redux"
 
 import "./LoginForm.scss"
-import { loginSuccess } from "../../redux/ducks/auth/auth-reducer"
 
-interface Props {}
+interface ILoginFormProps {
+  onSubmit: (username: string) => void
+}
 
-const LoginForm: React.FC = (props: Props) => {
-  const dispatch = useDispatch()
-
+const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
   const onFinish = (values: any) => {
-    dispatch(loginSuccess(values.username))
-    console.log("Success:", values)
-  }
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo)
+    if (values.username.trim()) {
+      onSubmit(values.username.trim())
+    }
   }
 
   return (
@@ -26,9 +21,8 @@ const LoginForm: React.FC = (props: Props) => {
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
-        <h3 className="form-title">Добро пожаловать!</h3>
+        <h3 className="form-title">Real Time Chat</h3>
         <Form.Item
           name="username"
           rules={[{ required: true, message: "Необходимо ввести логин" }]}

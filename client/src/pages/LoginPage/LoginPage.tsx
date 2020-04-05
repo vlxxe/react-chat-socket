@@ -1,13 +1,16 @@
 import React from "react"
+import { useDispatch } from "react-redux"
 
 import LoginForm from "../../components/LoginForm/LoginForm"
+import { loginSuccess } from "../../redux/ducks/auth/auth-reducer"
 
-interface Props {}
+const LoginPage: React.FC = () => {
+  const dispatch = useDispatch()
+  const onSubmit = (username: string) => dispatch(loginSuccess(username))
 
-const LoginPage: React.FC = (props: Props) => {
   return (
     <div>
-      <LoginForm />
+      <LoginForm onSubmit={onSubmit} />
     </div>
   )
 }

@@ -1,21 +1,16 @@
-import { createStore, applyMiddleware, compose } from "redux"
-import createSagaMiddleware from "redux-saga"
+import {
+  configureStore,
+  getDefaultMiddleware,
+  Middleware,
+} from "@reduxjs/toolkit"
 
 import { rootReducer } from "./rootReducer"
-import { authRootSaga } from "./ducks/auth/auth-saga"
+import socketMiddleware from "../middleware/socketMiddleware"
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose
-  }
-}
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const sagaMiddleware = createSagaMiddleware()
-
-export const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware))
-)
-
-sagaMiddleware.run(authRootSaga)
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: [
+    ...getDefaultMiddleware(),
+    socketMiddleware() as Middleware,
+  ] as const,
+})

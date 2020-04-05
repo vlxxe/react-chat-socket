@@ -2,39 +2,37 @@ const config = require("config")
 const http = require("http")
 const express = require("express")
 const socketio = require("socket.io")
-const moment = require("moment")
+const formatMessage = require("./utils/formatMessage")
 
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
 const PORT = config.get("port") || 5000
+const BOT_NAME = "ChatBot"
 
-io.on("connection", socket => {
-  /* socket.emit("message", {
-    author: "Bot Vyacheslav",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    text: "Добро пожаловать в чат"
-  })
+io.on("connection", (socket) => {
+  socket.on("joinMainRoom", (username) => {
+    // Welcome to current user
+    socket.emit(
+      "newMessage",
+      formatMessage(BOT_NAME, `Добро пожаловать в чат ${username}`)
+    )
 
-  socket.broadcast.emit("message", {
-    author: "Bot Vyacheslav",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    text: "Юзер присоединился!"
-  })
+    // Broadcast on connection user
+    socket.broadcast.emit(
+      "newMessage",
+      formatMessage(BOT_NAME, `${username} присоединился`)
+    )
 
-  socket.on("disconnect", () => {
-    io.emit("message", {
-      author: "Bot Vyacheslav",
-      avatar:
-        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      text: "Юзер Вышел"
+    // Broadcast on disconnection user
+    socket.on("disconnect", () => {
+      io.emit("newMessage", formatMessage(BOT_NAME, `${username} Вышел`))
     })
-  }) */
 
-  socket.on("newMessage", message => {
-    console.log(message)
-    io.sockets.emit("message", { ...message, time: moment().format("HH:mm") })
+    socket.on("newMessage", (message) => {
+      io.sockets.emit("newMessage", formatMessage(message.author, message.text))
+    })
   })
 })
 
