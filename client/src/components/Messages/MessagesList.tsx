@@ -30,12 +30,7 @@ const MessagesList: React.FC<IMessagesList> = ({ messages }) => {
       dataSource={messages}
       renderItem={(item) => (
         <li ref={messageEl}>
-          <MessageItem
-            author={item.author}
-            avatar={item.avatar}
-            text={item.text}
-            time={item.time}
-          />
+          <MessageItem author={item.author} text={item.text} time={item.time} />
         </li>
       )}
     />

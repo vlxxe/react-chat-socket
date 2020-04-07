@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import MainLayout from "../../layouts/MainLayout/MainLayout"
 import ChatInput from "../../components/ChatInput/ChatInput"
 import MessagesList from "../../components/Messages/MessagesList"
+import Users from "../../components/Users/Users"
 import { RootState } from "../../redux/rootReducer"
 import { messageSending } from "../../redux/ducks/messages/messages-reducer"
 
@@ -13,15 +14,14 @@ const ChatPage: React.FC = () => {
     (state: RootState) => state.messagesStore.mainChatMessages
   )
 
-  const username = useSelector((state: RootState) => state.authStore.username)
-
   const sendMessage = (text: string) => {
-    dispatch(messageSending({ author: username, text }))
+    dispatch(messageSending(text))
     text = ""
   }
 
   return (
     <MainLayout
+      users={<Users />}
       messages={<MessagesList messages={messages} />}
       input={<ChatInput onSubmit={sendMessage} />}
     />

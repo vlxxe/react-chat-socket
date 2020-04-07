@@ -7,14 +7,17 @@ import { MessageFromServerType } from "../../redux/ducks/messages/messages-types
 
 const MessageItem: React.FC<MessageFromServerType> = ({
   author,
-  avatar,
   text,
   time,
 }) => {
   return (
     <Comment
       className="message"
-      author={<a>{author}</a>}
+      author={
+        <a>
+          <b>{author}</b>
+        </a>
+      }
       /* avatar={<Avatar src={avatar} alt={author} />} */
       content={<p>{text}</p>}
       datetime={

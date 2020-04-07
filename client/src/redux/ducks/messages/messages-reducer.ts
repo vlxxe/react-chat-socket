@@ -1,18 +1,12 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 
-import {
-  MessagesStateType,
-  MessageFromServerType,
-  MessageFromClientType,
-} from "./messages-types"
+import { MessagesStateType, MessageFromServerType } from "./messages-types"
 
 export const messageReceived = createAction<MessageFromServerType>(
   "messages/MESSAGE_RECEIVED"
 )
 
-export const messageSending = createAction<MessageFromClientType>(
-  "messages/MESSAGE_SENDING"
-)
+export const messageSending = createAction<string>("messages/MESSAGE_SENDING")
 
 const initialState: MessagesStateType = {
   mainChatMessages: [],

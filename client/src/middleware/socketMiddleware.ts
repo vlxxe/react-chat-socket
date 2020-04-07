@@ -6,11 +6,16 @@ import {
   messageSending,
 } from "../redux/ducks/messages/messages-reducer"
 import { MessageFromServerType } from "../redux/ducks/messages/messages-types"
+import { updateUsers } from "../redux/ducks/users/users-reducer"
 
 const server = "http://localhost:5000"
 
 const socketMiddleware = () => {
   let socket: SocketIOClient.Socket | null = null
+
+  const joinRoom = (username: string, room: string): void => {
+    socket?.emit("joinRoom", { username, room })
+  }
 
   return ({ dispatch }) => (next) => (action) => {
     switch (action.type) {
@@ -21,7 +26,12 @@ const socketMiddleware = () => {
 
         socket = io.connect(server)
         // join in main room
-        socket.emit("joinMainRoom", action.payload)
+        const username = action.payload
+        joinRoom(username, "main")
+        // listener for users info
+        socket.on("roomInfo", (data) => {
+          dispatch(updateUsers(data))
+        })
         // listener for all new messages
         socket.on("newMessage", (message: MessageFromServerType) => {
           dispatch(messageReceived(message))
