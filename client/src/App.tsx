@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react"
 import Loader from "./components/common/Loader/Loader"
-import { Route, Switch } from "react-router-dom"
+import { Route, Switch, Redirect } from "react-router-dom"
 
 import { useSelector } from "react-redux"
 import { AppStateType } from "./redux/rootReducer"
@@ -19,9 +19,15 @@ const App: React.FC = (props: IAppProps) => {
     <Suspense fallback={<Loader />}>
       <Switch>
         {isAuth ? (
-          <Route path="/" component={ChatPage} />
+          <>
+            <Route path="/chat" component={ChatPage} />
+            <Redirect path="*" to="/chat" />
+          </>
         ) : (
-          <Route path="/" component={LoginPage} />
+          <>
+            <Route path="/login" component={LoginPage} />
+            <Redirect path="*" to="/login" />
+          </>
         )}
       </Switch>
     </Suspense>

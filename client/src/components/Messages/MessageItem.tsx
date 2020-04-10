@@ -1,6 +1,5 @@
 import React from "react"
-import { Comment, Avatar, Tooltip } from "antd"
-import moment from "moment"
+import { Comment, Tooltip } from "antd"
 
 import "./MessageItem.scss"
 import { MessageFromServerType } from "../../redux/ducks/messages/messages-types"
@@ -13,25 +12,14 @@ const MessageItem: React.FC<MessageFromServerType> = ({
   return (
     <Comment
       className="message"
+      avatar={false}
       author={
         <a>
           <b>{author}</b>
         </a>
       }
-      /* avatar={<Avatar src={avatar} alt={author} />} */
       content={<p>{text}</p>}
-      datetime={
-        <Tooltip
-          title={moment().subtract(2, "days").format("YYYY-MM-DD HH:mm:ss")}
-        >
-          <span>
-            {time}
-            {/* {moment()
-              .subtract(2, "days")
-              .fromNow()} */}
-          </span>
-        </Tooltip>
-      }
+      datetime={<span>{time}</span>}
     />
   )
 }

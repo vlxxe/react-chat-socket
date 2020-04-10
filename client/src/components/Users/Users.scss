@@ -1,0 +1,12 @@
+.layout-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-user-menu {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .ant-menu-item-only-child {
+  }
+}

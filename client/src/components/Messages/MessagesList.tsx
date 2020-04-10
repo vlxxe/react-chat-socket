@@ -6,10 +6,10 @@ import { MessageFromServerType } from "../../redux/ducks/messages/messages-types
 
 interface IMessagesList {
   messages: MessageFromServerType[]
+  userSocketId: string
 }
 
-const MessagesList: React.FC<IMessagesList> = ({ messages }) => {
-  console.log("messages: ", messages)
+const MessagesList: React.FC<IMessagesList> = ({ messages, userSocketId }) => {
   const messageEl = useRef<HTMLLIElement>(null)
 
   const scrollToBottom = () => {
@@ -29,7 +29,12 @@ const MessagesList: React.FC<IMessagesList> = ({ messages }) => {
       locale={{ emptyText: "Сообщений нет" }}
       dataSource={messages}
       renderItem={(item) => (
-        <li ref={messageEl}>
+        <li
+          ref={messageEl}
+          className={
+            item.authorId === userSocketId ? "current-user-message" : ""
+          }
+        >
           <MessageItem author={item.author} text={item.text} time={item.time} />
         </li>
       )}

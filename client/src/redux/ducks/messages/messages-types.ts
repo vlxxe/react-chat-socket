@@ -3,6 +3,7 @@ export type MessagesStateType = {
 }
 
 export type MessageFromServerType = {
+  authorId?: string
   author: string
   text: string
   time: string

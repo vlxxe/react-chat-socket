@@ -1,18 +1,32 @@
-import React, { ReactElement } from "react"
+import React from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { Layout, Menu } from "antd"
-import { UserOutlined } from "@ant-design/icons"
 
 import "./MainLayout.scss"
+import ChatInput from "../../components/ChatInput/ChatInput"
+import MessagesList from "../../components/Messages/MessagesList"
+import Users from "../../components/Users/Users"
+import { RootState } from "../../redux/rootReducer"
+import { messageSending } from "../../redux/ducks/messages/messages-reducer"
 
 const { Header, Content } = Layout
 
-interface IMainLayout {
-  users: ReactElement
-  messages: ReactElement
-  input: ReactElement
-}
+interface IMainLayout {}
 
-const MainLayout: React.FC<IMainLayout> = ({ users, messages, input }) => {
+const MainLayout: React.FC<IMainLayout> = () => {
+  const dispatch = useDispatch()
+
+  const messages = useSelector(
+    (state: RootState) => state.messagesStore.mainChatMessages
+  )
+  const userSocketId = useSelector(
+    (state: RootState) => state.authStore.socketId
+  )
+
+  const sendMessage = (text: string) => {
+    dispatch(messageSending(text))
+  }
+
   return (
     <Layout className="main-layout">
       <Header className="header">
@@ -24,11 +38,15 @@ const MainLayout: React.FC<IMainLayout> = ({ users, messages, input }) => {
       </Header>
       <Content className="main-layout-container">
         <Layout className="site-layout-background">
-          {users}
+          <Users />
           <Content className="main-layout-content-container">
-            <div className="main-layout-messages">{messages}</div>
+            <div className="main-layout-messages">
+              <MessagesList messages={messages} userSocketId={userSocketId} />
+            </div>
 
-            <div className="main-layout-input">{input}</div>
+            <div className="main-layout-input">
+              <ChatInput onSubmit={sendMessage} />
+            </div>
           </Content>
         </Layout>
       </Content>

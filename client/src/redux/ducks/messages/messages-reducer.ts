@@ -1,23 +1,25 @@
-import { createAction, createReducer } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { MessagesStateType, MessageFromServerType } from "./messages-types"
-
-export const messageReceived = createAction<MessageFromServerType>(
-  "messages/MESSAGE_RECEIVED"
-)
-
-export const messageSending = createAction<string>("messages/MESSAGE_SENDING")
 
 const initialState: MessagesStateType = {
   mainChatMessages: [],
 }
 
-export const messagesReducer = createReducer(initialState, (builder) =>
-  builder
-    .addCase(messageReceived, (state, action) => {
+const messagesReducer = createSlice({
+  name: "messages",
+  initialState,
+  reducers: {
+    messageReceived: (state, action: PayloadAction<MessageFromServerType>) => {
       state.mainChatMessages.push(action.payload)
-    })
-    .addCase(messageSending, (state, action) => {
+    },
+    messageSending: (state, action: PayloadAction<string>) => {
+      // we get this message from server
       return state
-    })
-)
+    },
+  },
+})
+
+const { actions, reducer } = messagesReducer
+export const { messageReceived, messageSending } = actions
+export { reducer as messagesReducer }

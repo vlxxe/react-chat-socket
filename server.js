@@ -16,6 +16,7 @@ const io = socketio(server)
 
 const PORT = config.get("port") || 5000
 const BOT_NAME = "ChatBot"
+const BOT_ID = "Bot"
 
 io.on("connection", (socket) => {
   socket.on("joinRoom", ({ username, room }) => {
@@ -25,24 +26,25 @@ io.on("connection", (socket) => {
     // Welcome to current user
     socket.emit(
       "newMessage",
-      formatMessage(BOT_NAME, `Добро пожаловать ${user.username}`)
+      formatMessage(BOT_ID, BOT_NAME, `Добро пожаловать ${user.username}`)
     )
-    // send room info to current user
-    socket.emit("roomInfo", {
-      room: user.room,
-      users: getRoomUsers(user.room),
-    })
+    // set socket to current user
+    socket.emit("setSocketId", socket.id)
 
     // broadcast about joined user
-    socket.broadcast
+    socket
       .to(user.room)
       .emit(
         "newMessage",
-        formatMessage(BOT_NAME, `Присоединился к каналу ${user.username}`)
+        formatMessage(
+          BOT_ID,
+          BOT_NAME,
+          `Присоединился к каналу ${user.username}`
+        )
       )
 
     // broadcast update room info
-    socket.broadcast.to(user.room).emit("roomInfo", {
+    io.in(user.room).emit("roomInfo", {
       room: user.room,
       users: getRoomUsers(user.room),
     })
@@ -51,7 +53,10 @@ io.on("connection", (socket) => {
   // Listener on new messages
   socket.on("newMessage", (message) => {
     const user = getCurrentUser(socket.id)
-    io.to(user.room).emit("newMessage", formatMessage(user.username, message))
+    io.to(user.room).emit(
+      "newMessage",
+      formatMessage(socket.id, user.username, message)
+    )
   })
 
   // on disconnect user
@@ -59,12 +64,14 @@ io.on("connection", (socket) => {
     const user = userLeave(socket.id)
 
     if (user) {
-      io.to(user.room).emit(
-        "newMessage",
-        formatMessage(BOT_NAME, `Вышел из канала ${user.username}`)
-      )
+      socket
+        .to(user.room)
+        .emit(
+          "newMessage",
+          formatMessage(BOT_ID, BOT_NAME, `Вышел из канала ${user.username}`)
+        )
 
-      io.to(user.room).emit("roomInfo", {
+      socket.to(user.room).emit("roomInfo", {
         room: user.room,
         users: getRoomUsers(user.room),
       })
